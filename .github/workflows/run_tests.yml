@@ -1,39 +1,33 @@
 name: Suite de Pruebas Automatizadas Playwright
 
-# 1. CUÁNDO SE EJECUTA: Cada vez que hagamos un 'git push' a la rama main
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
 
-# 2. QUÉ VA A HACER EL SERVIDOR EN LA NUBE
 jobs:
   test_execution:
     name: Ejecución de Tests en Ubuntu Cloud
-    runs-on: ubuntu-latest # Levanta una máquina virtual con el último Ubuntu
+    runs-on: ubuntu-latest
 
     steps:
-    # Paso A: Descargar el código del repositorio
     - name: Descargar repositorio
       uses: actions/checkout@v4
 
-    # Paso B: Instalar Python en el servidor remoto
     - name: Configurar Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
 
-    # Paso C: Instalar las dependencias del proyecto (Sin meter la carpeta env)
+    # CORRECCIÓN AQUÍ: Comando de actualización de pip reparado y agregada la dependencia de URL base
     - name: Instalar librerías del framework
       run: |
-        python -m pip upgrade pip
-        pip install playwright pytest pytest-html Faker base-url-pytest
+        python -m pip install --upgrade pip
+        pip install playwright pytest pytest-html Faker pytest-base-url
 
-    # Paso D: Instalar los binarios de los navegadores de Playwright (Chromium)
     - name: Instalar Navegadores de Playwright
       run: playwright install chromium --with-deps
 
-    # Paso E: Lanzar las pruebas (Ejecuta el pytest.ini pero en modo oculto para la nube)
     - name: Ejecutar Suite de Tests con Pytest
       run: pytest --headless
