@@ -28,6 +28,8 @@ jobs:
     - name: Instalar Navegadores de Playwright
       run: playwright install chromium --with-deps
 
-    # REPARACIÓN AQUÍ: Desactivamos addopts locales para que no intente abrir la interfaz gráfica visual en la nube
+    # REPARACIÓN AQUÍ: Ejecutamos pytest normal y le inyectamos la variable de entorno para apagar la interfaz gráfica
     - name: Ejecutar Suite de Tests con Pytest
-      run: pytest -o addopts="" --headless
+      run: pytest
+      env:
+        HEADLESS: true
