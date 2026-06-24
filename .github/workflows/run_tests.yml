@@ -20,7 +20,6 @@ jobs:
       with:
         python-version: '3.12'
 
-    # CORRECCIÓN AQUÍ: Comando de actualización de pip reparado y agregada la dependencia de URL base
     - name: Instalar librerías del framework
       run: |
         python -m pip install --upgrade pip
@@ -29,5 +28,6 @@ jobs:
     - name: Instalar Navegadores de Playwright
       run: playwright install chromium --with-deps
 
+    # REPARACIÓN AQUÍ: Desactivamos addopts locales para que no intente abrir la interfaz gráfica visual en la nube
     - name: Ejecutar Suite de Tests con Pytest
-      run: pytest --headless
+      run: pytest -o addopts="" --headless
