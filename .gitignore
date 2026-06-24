@@ -1,0 +1,5 @@
+env/
+.pytest_cache/
+test-results/
+reporte.html
+*.pyc

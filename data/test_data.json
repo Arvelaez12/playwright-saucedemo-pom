@@ -1,0 +1,15 @@
+{
+  "valid_user": {
+    "username": "standard_user",
+    "password": "secret_sauce"
+  },
+  "invalid_user": {
+    "username": "usuario_falso",
+    "password": "clave_incorrecta"
+  },
+  "checkout_data": {
+    "first_name": "Alberto",
+    "last_name": "Arvelaez",
+    "postal_code": "12345"
+  }
+}
