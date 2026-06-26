@@ -4,3 +4,4 @@ test-results/
 reporte.html
 *.pyc
 allure-results/
+*.db
