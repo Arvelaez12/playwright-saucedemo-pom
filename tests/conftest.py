@@ -1,5 +1,6 @@
 import pytest
 import json
+import sqlite3
 from pages.login_page import LoginPage  # <-- Importamos la página de login aquí
 from faker import Faker
 
@@ -49,3 +50,29 @@ def generar_cliente_falso():
         "postal_code": fake.postcode()
     }
     return datos_personales
+
+@pytest.fixture
+def db_session():
+    """
+    Fixture Senior que gestiona el ciclo de vida de la BD con Setup y Teardown seguros.
+    """
+    # 1. SETUP: Conectarse y preparar base de datos antes del test
+    conexion = sqlite3.connect("tienda.db")
+    cursor = conexion.cursor()
+    
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL,
+            email TEXT UNIQUE NOT NULL
+        )
+    """)
+    cursor.execute("DELETE FROM usuarios")
+    conexion.commit()
+    
+    # 2. EJECUCIÓN: Entrega el cursor al test y detiene la ejecución aquí
+    yield cursor
+    
+    # 3. TEARDOWN: Pase lo que pase (éxito o fallo), Pytest garantiza que este código corre al final
+    conexion.commit()
+    conexion.close()

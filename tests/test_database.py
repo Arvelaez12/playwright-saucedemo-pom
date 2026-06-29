@@ -1,41 +1,21 @@
 import pytest
-import sqlite3 # Librería nativa de Python para bases de datos SQL
 
-def test_verificar_insercion_en_base_de_datos():
-    # 1. Conectarse a la base de datos (si el archivo no existe, Python lo crea automáticamente)
-    conexion = sqlite3.connect("tienda.db")
+def test_verificar_insercion_en_base_de_datos(db_session):
+    # 1. Usamos el cursor provisto automáticamente por el fixture
+    cursor = db_session
     
-    # El cursor es el "puntero" que nos permite escribir y ejecutar comandos SQL
-    cursor = conexion.cursor()
-    
-    # 2. Crear una tabla de prueba limpia
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS usuarios (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL
-        )
-    """)
-    
-    # Limpiamos la tabla por si acaso corremos el test varias veces
-    cursor.execute("DELETE FROM usuarios")
-    
-    # 3. Insertar un registro usando SQL puro
+    # 2. Insertar un registro usando SQL puro
     nombre_prueba = "Carlos QA"
     email_prueba = "carlos@testing.com"
     cursor.execute("INSERT INTO usuarios (nombre, email) VALUES (?, ?)", (nombre_prueba, email_prueba))
     
-    # Guardar los cambios físicamente en el archivo de la base de datos
-    conexion.commit()
+    # El commit y cierre físico de la conexión lo delegamos automáticamente al fixture al terminar.
     
-    # 4. PRUEBA DE AUTOMATIZACIÓN: Consultar el dato para verificarlo
+    # 3. PRUEBA DE AUTOMATIZACIÓN: Consultar el dato para verificarlo
     cursor.execute("SELECT nombre, email FROM usuarios WHERE email = ?", (email_prueba,))
     resultado = cursor.fetchone() # Trae el primer registro que coincida
     
-    # Cerramos la conexión de forma limpia
-    conexion.close()
-    
-    # 5. VALIDACIONES: Comprobar que el registro no sea nulo y tenga los datos correctos
+    # 4. VALIDACIONES: Comprobar que el registro no sea nulo y tenga los datos correctos
     assert resultado is not None, "Error: El usuario no fue encontrado en la base de datos"
     
     nombre_en_bd, email_en_bd = resultado
