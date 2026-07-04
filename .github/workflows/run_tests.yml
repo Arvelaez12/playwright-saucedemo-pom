@@ -31,3 +31,10 @@ jobs:
     # REPARACIÓN AQUÍ: Le decimos a pytest que ignore el archivo pytest.ini usando -c /dev/null
     - name: Ejecutar Suite de Tests con Pytest
       run: pytest -c /dev/null tests/
+
+    - name: Guardar Reporte HTML como Evidencia
+      if: always() # 💡 Esto es un truco maestro: rescata el reporte aunque algún test falle
+      uses: actions/upload-artifact@v4
+      with:
+          name: reporte-automatizacion-alberto
+          path: reporte.html  
