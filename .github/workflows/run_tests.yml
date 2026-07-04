@@ -28,13 +28,13 @@ jobs:
     - name: Instalar Navegadores de Playwright
       run: playwright install chromium --with-deps
 
-    # REPARACIÓN AQUÍ: Le decimos a pytest que ignore el archivo pytest.ini usando -c /dev/null
+    # REPARACIÓN COMPLETA: Agregamos las banderas para forzar la creación de reporte.html en la raíz
     - name: Ejecutar Suite de Tests con Pytest
-      run: pytest -c /dev/null tests/
+      run: pytest -c /dev/null tests/ --html=reporte.html --self-contained-html
 
     - name: Guardar Reporte HTML como Evidencia
-      if: always() # 💡 Esto es un truco maestro: rescata el reporte aunque algún test falle
+      if: always() 
       uses: actions/upload-artifact@v4
       with:
           name: reporte-automatizacion-alberto
-          path: reporte.html  
+          path: reporte.html
