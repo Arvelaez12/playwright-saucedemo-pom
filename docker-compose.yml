@@ -1,9 +1,10 @@
 version: "3.8"
 
 services:
-  automatizacion-qa:
+  pytest:
     build: .
     container_name: contenedor_suite_alberto
+    # 🎯 ESTA ES LA CLAVE TEÓRICA: Mantiene la terminal del contenedor abierta para que no se apague solo
+    tty: true 
     volumes:
       - .:/app
-    command: pytest
