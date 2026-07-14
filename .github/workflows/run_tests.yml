@@ -28,11 +28,38 @@ jobs:
     - name: Instalar Navegadores de Playwright
       run: playwright install chromium --with-deps
 
-    # REPARACIÓN COMPLETA: Agregamos las banderas para forzar la creación de reporte.html en la raíz
+    # 🏎️ PASO MODIFICADO: Ahora generamos tanto el reporte HTML ejecutivo como los resultados JSON de Allure
     - name: Ejecutar Suite de Tests con Pytest
-      run: pytest -c /dev/null tests/ --html=reporte.html --self-contained-html
+      run: |
+        pytest -c /dev/null tests/ --alluredir=allure-results --html=reporte.html --self-contained-html || true
 
-    - name: Guardar Reporte HTML como Evidencia
+    # 📊 PASO NUEVO: Obtener el historial previo de Allure desde la rama gh-pages
+    - name: Descargar historial de Allure
+      uses: actions/checkout@v4
+      if: always()
+      with:
+        ref: gh-pages
+        path: gh-pages-dir
+
+    # 🛠️ PASO NUEVO: Compilar Allure uniendo el pasado con el presente
+    - name: Generar Reporte Allure con Historial
+      uses: simple-elf/allure-report-action@master
+      if: always()
+      with:
+        allure_results: allure-results
+        allure_history: allure-history
+        keep_reports: 20  # Guarda el historial de las últimas 20 ejecuciones
+
+    # 🚀 PASO NUEVO: Publicar el reporte final en GitHub Pages de manera automática
+    - name: Desplegar reporte Allure a GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      if: always()
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: allure-history
+
+    - name: Guardar Reporte HTML como Evidencia Temporal
       if: always() 
       uses: actions/upload-artifact@v4
       with:
