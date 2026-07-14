@@ -28,4 +28,4 @@ def test_mocking_inventario_vip(page: Page):
         # 🎯 Cambiamos a la aserción correcta: esperamos ver los 6 productos en pantalla
         cantidad_productos = elementos_inventario.count()
         assert cantidad_productos == 6, f"❌ Se esperaban 6 productos, pero se encontraron: {cantidad_productos}"
-        # Modificación de prueba para validar el historial del pipeline en GitHub Pages
+        # Modificación de prueba para validar elreporte en vivo y directo.
